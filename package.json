@@ -4,7 +4,8 @@
   "description": "Backend del proyecto crudFood",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index",
+    "dev": "node --env-file .env --watch index"
   },
   "keywords": [
     "rutas",
