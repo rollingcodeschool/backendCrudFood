@@ -5,5 +5,6 @@ export const prueba = (req, res)=>{
 
 export const crearProducto = (req, res)=>{
  res.send('Aqui tenemos que crear el producto')
+
 }
 
