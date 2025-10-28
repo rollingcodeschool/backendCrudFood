@@ -13,7 +13,40 @@ const validacionProducto = [
     .isNumeric()
     .withMessage("El precio del producto debe ser numerico")
     .isFloat({ min: 100, max: 1000000 })
-    .withMessage("El precio del producto debe estar entre 100 y 1000000 de pesos argentinos"),
+    .withMessage(
+      "El precio del producto debe estar entre 100 y 1000000 de pesos argentinos"
+    ),
+  body("descripcion_breve")
+    .notEmpty()
+    .withMessage("La descripcion breve es un dato obligatorio")
+    .isLength({ min: 5, max: 250 })
+    .withMessage("La descripcion breve debe tener entre 5 y 250 caracteres"),
+  body("descripcion_amplia")
+    .notEmpty()
+    .withMessage("La descripcion amplia es un dato obligatorio")
+    .isLength({ min: 10, max: 500 })
+    .withMessage("La descripcion amplia debe tener entre 10 y 500 caracteres"),
+  body("categoria")
+    .notEmpty()
+    .withMessage("La categoria es un dato obligatorio")
+    .isIn([
+      "Acompañamientos",
+      "Bebidas",
+      "Ensaladas",
+      "Hamburguesas",
+      "Postres",
+      "Pizzas",
+      "Sándwiches y Wraps",
+      "Veggie/Veganas",
+    ])
+    .withMessage(
+      'La categoria debe ser uno de los siguientes terminos: ["Acompañamientos", "Bebidas", "Ensaladas", "Hamburguesas","Postres", "Pizzas", "Sándwiches y Wraps", "Veggie/Veganas"]'
+    ),
+  body('imagen')
+  .notEmpty()
+  .withMessage('La imagen es un dato obligatorio')
+  .matches(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\.(jpg|jpeg|png|webp))$/)
+  .withMessage('La imagen debe cumplir con el formato de una url de imagen terminada en alguno de los siguientes valores: jpg|jpeg|png|webp'),
   (req, res, next) => resultadoValidacion(req, res, next),
 ];
 
