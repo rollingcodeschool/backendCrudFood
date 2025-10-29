@@ -1,12 +1,30 @@
 import { body } from "express-validator";
 import resultadoValidacion from "./resultadoValidacion.js";
+import Producto from "../models/producto.js";
 
 const validacionProducto = [
   body("nombreProducto")
     .notEmpty()
     .withMessage("El nombre del producto es un dato obligatorio")
     .isLength({ min: 2, max: 100 })
-    .withMessage("El nombre del producto debe tener entre 2 y 100 caracteres"),
+    .withMessage("El nombre del producto debe tener entre 2 y 100 caracteres")
+    .custom(async (valor, { req }) => {
+      const productoExistente = await Producto.findOne({
+        nombreProducto: valor,
+      });
+      // quiero preguntar si no encontramos un producto con el nombre del valor
+      if (!productoExistente) {
+        return true;
+      }
+      //enviar un mensaje de error
+      if (
+        req.params?.id &&
+        productoExistente._id.toString() === req.params.id
+      ) {
+        return true;
+      }
+      throw new Error("Ya existe un producto con ese nombre");
+    }),
   body("precio")
     .notEmpty()
     .withMessage("El precio del producto es un dato obligatorio")
@@ -42,11 +60,15 @@ const validacionProducto = [
     .withMessage(
       'La categoria debe ser uno de los siguientes terminos: ["Acompañamientos", "Bebidas", "Ensaladas", "Hamburguesas","Postres", "Pizzas", "Sándwiches y Wraps", "Veggie/Veganas"]'
     ),
-  body('imagen')
-  .notEmpty()
-  .withMessage('La imagen es un dato obligatorio')
-  .matches(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\.(jpg|jpeg|png|webp))$/)
-  .withMessage('La imagen debe cumplir con el formato de una url de imagen terminada en alguno de los siguientes valores: jpg|jpeg|png|webp'),
+  body("imagen")
+    .notEmpty()
+    .withMessage("La imagen es un dato obligatorio")
+    .matches(
+      /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\.(jpg|jpeg|png|webp))$/
+    )
+    .withMessage(
+      "La imagen debe cumplir con el formato de una url de imagen terminada en alguno de los siguientes valores: jpg|jpeg|png|webp"
+    ),
   (req, res, next) => resultadoValidacion(req, res, next),
 ];
 
