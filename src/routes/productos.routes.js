@@ -9,6 +9,7 @@ import {
 } from "../controllers/productos.controllers.js";
 import validacionProducto from "../middleware/validacionProducto.js";
 import validacionIdProducto from "../middleware/validacionIdProducto.js";
+import verificarJWT from "../middleware/verificarToken.js";
 /*
 GET
 POST
@@ -19,7 +20,7 @@ DELETE
 const router = Router();
 
 router.route("/test").get(prueba);
-router.route("/").post(validacionProducto,crearProducto).get(listarProductos);
+router.route("/").post([verificarJWT,validacionProducto],crearProducto).get(listarProductos);
 router.route("/:id").get(validacionIdProducto, obtenerProducto).delete(validacionIdProducto, borrarProductoPorID).put([validacionIdProducto, validacionProducto],editarProductoPorID)
 
 export default router;
