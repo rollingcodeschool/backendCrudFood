@@ -20,7 +20,17 @@ DELETE
 const router = Router();
 
 router.route("/test").get(prueba);
-router.route("/").post([verificarJWT,validacionProducto],crearProducto).get(listarProductos);
-router.route("/:id").get(validacionIdProducto, obtenerProducto).delete(validacionIdProducto, borrarProductoPorID).put([validacionIdProducto, validacionProducto],editarProductoPorID)
+router
+  .route("/")
+  .post([verificarJWT, validacionProducto], crearProducto)
+  .get(listarProductos);
+router
+  .route("/:id")
+  .get(validacionIdProducto, obtenerProducto)
+  .delete([verificarJWT, validacionIdProducto], borrarProductoPorID)
+  .put(
+    [verificarJWT, validacionIdProducto, validacionProducto],
+    editarProductoPorID
+  );
 
 export default router;
