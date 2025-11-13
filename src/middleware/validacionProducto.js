@@ -60,15 +60,6 @@ const validacionProducto = [
     .withMessage(
       'La categoria debe ser uno de los siguientes terminos: ["Acompañamientos", "Bebidas", "Ensaladas", "Hamburguesas","Postres", "Pizzas", "Sándwiches y Wraps", "Veggie/Veganas"]'
     ),
-  body("imagen")
-    .notEmpty()
-    .withMessage("La imagen es un dato obligatorio")
-    .matches(
-      /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\.(jpg|jpeg|png|webp))$/
-    )
-    .withMessage(
-      "La imagen debe cumplir con el formato de una url de imagen terminada en alguno de los siguientes valores: jpg|jpeg|png|webp"
-    ),
   (req, res, next) => resultadoValidacion(req, res, next),
 ];
 
