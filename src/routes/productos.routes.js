@@ -10,6 +10,8 @@ import {
 import validacionProducto from "../middleware/validacionProducto.js";
 import validacionIdProducto from "../middleware/validacionIdProducto.js";
 import verificarJWT from "../middleware/verificarToken.js";
+import upload from "../helpers/upload.js";
+import errorMulter from "../middleware/errorMulter.js";
 /*
 GET
 POST
@@ -22,7 +24,7 @@ const router = Router();
 router.route("/test").get(prueba);
 router
   .route("/")
-  .post([verificarJWT, validacionProducto], crearProducto)
+  .post([verificarJWT, upload.single('imagen'), errorMulter, validacionProducto], crearProducto)
   .get(listarProductos);
 router
   .route("/:id")
