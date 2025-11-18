@@ -31,7 +31,7 @@ router
   .get(validacionIdProducto, obtenerProducto)
   .delete([verificarJWT, validacionIdProducto], borrarProductoPorID)
   .put(
-    [verificarJWT, validacionIdProducto, validacionProducto],
+    [verificarJWT, upload.single('imagen'), errorMulter, validacionIdProducto, validacionProducto],
     editarProductoPorID
   );
 
