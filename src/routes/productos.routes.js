@@ -5,6 +5,7 @@ import {
   editarProductoPorID,
   listarProductos,
   obtenerProducto,
+  productosPaginados,
   prueba,
 } from "../controllers/productos.controllers.js";
 import validacionProducto from "../middleware/validacionProducto.js";
@@ -24,14 +25,24 @@ const router = Router();
 router.route("/test").get(prueba);
 router
   .route("/")
-  .post([verificarJWT, upload.single('imagen'), errorMulter, validacionProducto], crearProducto)
+  .post(
+    [verificarJWT, upload.single("imagen"), errorMulter, validacionProducto],
+    crearProducto
+  )
   .get(listarProductos);
+router.route("/paginacion").get(productosPaginados);
 router
   .route("/:id")
   .get(validacionIdProducto, obtenerProducto)
   .delete([verificarJWT, validacionIdProducto], borrarProductoPorID)
   .put(
-    [verificarJWT, upload.single('imagen'), errorMulter, validacionIdProducto, validacionProducto],
+    [
+      verificarJWT,
+      upload.single("imagen"),
+      errorMulter,
+      validacionIdProducto,
+      validacionProducto,
+    ],
     editarProductoPorID
   );
 

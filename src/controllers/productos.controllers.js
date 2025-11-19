@@ -85,13 +85,16 @@ export const editarProductoPorID = async (req, res) => {
       return res.status(404).json({ mensaje: "No se encontro el producto" });
     }
 
-    const productoActualizado ={ ...req.body}
+    const productoActualizado = { ...req.body };
 
     if (req.file) {
       const resultado = await subirImagenACloudinary(req.file.buffer);
       productoActualizado.imagen = resultado.secure_url;
     }
-    await Producto.updateOne({_id: req.params.id}, {$set: productoActualizado})
+    await Producto.updateOne(
+      { _id: req.params.id },
+      { $set: productoActualizado }
+    );
 
     res.status(200).json({ mensaje: "El producto fue editado correctamente" });
   } catch (error) {
@@ -99,5 +102,29 @@ export const editarProductoPorID = async (req, res) => {
     res
       .status(500)
       .json({ mensaje: "Ocurrio un error, no se pudo borrar el producto" });
+  }
+};
+
+export const productosPaginados = async (req, res) => {
+  try {
+    console.log(req.query);
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skip = (page - 1) * limit;
+
+    const [productos, cantidadProductos] = await Promise.all([Producto.find().skip(skip).limit(limit), Producto.countDocuments()])
+    res.status(200).json({
+      productos,
+      paginaActual: page,
+      cantidadProductos,
+      cantPaginas: Math.ceil(cantidadProductos / limit)
+    })
+    // const productos = await Producto.find().skip(skip).limit(limit)
+    // const cantidadProductos = await Producto.countDocuments()
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ mensaje: "Ocurrio un error al listar los productos paginados" });
   }
 };
